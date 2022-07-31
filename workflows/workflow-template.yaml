@@ -1,0 +1,30 @@
+- randomgen_function:
+    call: http.get
+    args:
+      url: https://{{REGION}}-{{PROJECT_ID}}.cloudfunctions.net/randomgen
+    result: randomgen_result
+- multiply_function:
+    call: http.post
+    args:
+      url: https://{{REGION}}-{{PROJECT_ID}}.cloudfunctions.net/multiply
+      body:
+        input: ${randomgen_result.body.random}
+    result: multiply_result
+- log_function:
+    call: http.get
+    args:
+      url: https://api.mathjs.org/v4/
+      query:
+        expr: ${"log(" + string(multiply_result.body.multiplied) + ")"}
+    result: log_result
+- floor_function:
+    call: http.post
+    args:
+      url: https://floor-g73dxe76ka-an.a.run.app/
+      auth:
+        type: OIDC
+      body:
+        input: ${log_result.body}
+    result: floor_result
+- return_result:
+    return: ${floor_result}
