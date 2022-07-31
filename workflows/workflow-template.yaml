@@ -20,11 +20,18 @@
 - floor_function:
     call: http.post
     args:
-      url: https://floor-g73dxe76ka-an.a.run.app/
+      url: {{CLOUD_RUN_URL}}
       auth:
         type: OIDC
       body:
         input: ${log_result.body}
     result: floor_result
+# 4以下なら最初から再実行
+- conditionalSwitch:
+    switch:
+      # string→intに変換
+      # https://cloud.google.com/workflows/docs/reference/stdlib/overview#conversion_functions
+      - condition: ${int(floor_result.body) <= 4}
+        next: randomgen_function
 - return_result:
     return: ${floor_result}
