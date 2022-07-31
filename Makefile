@@ -20,10 +20,11 @@ create-sa:
 
 # randomgen (Cloud Functions)
 deploy-randomgen:
-	cd randomgen
+	cd randomgen && \
 	gcloud functions deploy randomgen \
 		--runtime python37 \
 		--trigger-http \
+		--region ${REGION} \
 		--allow-unauthenticated
 
 run-randomgen:
@@ -31,10 +32,11 @@ run-randomgen:
 
 # multiply (Cloud Functions)
 deploy-multiply:
-	cd multiply
+	cd multiply && \
 	gcloud functions deploy multiply \
 		--runtime python37 \
 		--trigger-http \
+		--region ${REGION} \
 		--allow-unauthenticated
 
 run-multiply:
